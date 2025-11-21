@@ -1,0 +1,203 @@
+/* --------------------------------------------------
+   THEME VARIABLES
+-------------------------------------------------- */
+:root {
+  --bg: #121212;
+  --panel-bg: #111;
+  --muted: #9aa2ac;
+  --text: #e8eef1;
+  --accent: #6ea8fe;
+}
+
+:root.light {
+  --bg: #ffffff;
+  --panel-bg: #f7f9fc;
+  --muted: #616f7a;
+  --text: #0f1720;
+  --accent: #2b6cb0;
+}
+
+/* --------------------------------------------------
+   GLOBAL - FIX #1: Add Box Sizing
+-------------------------------------------------- */
+/* This ensures padding doesn't expand element width/height */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+}
+
+/* --------------------------------------------------
+   HEADER
+-------------------------------------------------- */
+.header-bar {
+  display: flex;
+  /* top: 0 removed because it does nothing in a flex/static flow */
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  height: 62px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(4px);
+
+  /* FIX #2: Optional - Ensures header stays on top if overlap occurs */
+  position: relative;
+  z-index: 10;
+}
+
+.header-bar h3 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+}
+
+.leader-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 12px;
+}
+
+/* header right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* theme toggle */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------
+   MAIN LAYOUT CONTAINER
+-------------------------------------------------- */
+.slide-container {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 62px);
+  overflow: hidden;
+}
+
+/* --------------------------------------------------
+   MAP BOX
+-------------------------------------------------- */
+.map-box {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-box>.leaflet-container {
+  width: 100%;
+  height: 100%;
+  /* border-radius: 10px;  <-- REMOVE THIS if you want full screen. 
+     Border radius creates gaps at the corners of the screen. */
+}
+
+/* --------------------------------------------------
+   RIGHT PANEL (OVERLAY)
+-------------------------------------------------- */
+.right-panel {
+  position: fixed;
+
+  /* FIX #3: Added 'px' unit */
+  top: 62px;
+
+  right: 0;
+  width: 320px;
+  height: calc(100% - 62px);
+  background: var(--panel-bg);
+  overflow-y: auto;
+  z-index: 99999;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --------------------------------------------------
+   PANEL CONTENT
+-------------------------------------------------- */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.panel-header .meta {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1.4rem;
+}
+
+.panel-body {
+  padding: 14px;
+}
+
+/* --------------------------------------------------
+   USER LIST
+-------------------------------------------------- */
+.user-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.user-item {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  margin-bottom: 6px;
+  border-radius: 6px;
+  color: var(--text);
+}
+
+/* --------------------------------------------------
+   LEAFLET FIXES
+-------------------------------------------------- */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.leaflet-container {
+  background: #181818 !important;
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zcashme-map-api",
+  "main": "src/index.js",
+  "compatibility_date": "2025-11-20",
+
+  "assets": {
+    "directory": "./data",
+    "binding": "ASSETS"
+  }
+  
+  // REMOVED the entire "build" section
+}
