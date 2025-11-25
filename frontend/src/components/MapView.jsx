@@ -14,7 +14,10 @@ export default function MapView({ clusters, onCitySelect, selectedFilter }) {
       worldCopyJump={true}
       style={{ width: "100%", height: "100%" }}
     >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+      />
 
       <ClusterLayer
         clusters={clusters}
