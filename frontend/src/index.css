@@ -177,7 +177,8 @@ body,
 .slide-container {
   position: relative;
   width: 100%;
-  height: calc(100% - 62px);
+  /* Height = 100% - Header (62px) - FilterBar (50px) */
+  height: calc(100% - 62px - 50px);
   overflow: hidden;
 }
 
@@ -204,12 +205,13 @@ body,
 .right-panel {
   position: fixed;
 
-  /* FIX #3: Added 'px' unit */
-  top: 62px;
+  /* FIX #3: Top = Header (62px) + FilterBar (50px) */
+  top: 112px;
 
   right: 0;
   width: 320px;
-  height: calc(100% - 62px);
+  /* Height = 100% - Top Offset (112px) */
+  height: calc(100% - 112px);
   background: var(--panel-bg);
   overflow-y: auto;
   z-index: 99999;

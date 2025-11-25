@@ -1,12 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import MapView from "./components/MapView";
 import RightPanel from "./components/RightPanel";
 import HeaderBar from "./components/HeaderBar";
+import FilterBar from "./components/FilterBar";
 import { useCityClusters } from "./hooks/useCityClusters";
 
 export default function App() {
   const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedFilter, setSelectedFilter] = useState("ALL");
   const { data: clusters, loading, error } = useCityClusters();
+
+  const filteredClusters = useMemo(() => {
+    if (selectedFilter === "ALL") return clusters;
+    return clusters.filter(c => c.city === selectedFilter);
+  }, [clusters, selectedFilter]);
 
   const [theme, setTheme] = useState(() => {
     // Check localStorage first
@@ -21,6 +28,11 @@ export default function App() {
   });
 
   const closePanel = () => setSelectedCity(null);
+
+  const handleFilterSelect = (filter) => {
+    setSelectedFilter(filter);
+    setSelectedCity(null); // Close panel when filter changes
+  };
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -60,11 +72,18 @@ export default function App() {
         onToggleTheme={toggleTheme}
       />
 
+      <FilterBar
+        clusters={clusters}
+        selectedFilter={selectedFilter}
+        onFilterSelect={handleFilterSelect}
+      />
+
       <div className={`slide-container ${selectedCity ? "open" : ""}`}>
         <div className="map-box">
           <MapView
-            clusters={clusters}
+            clusters={filteredClusters}
             onCitySelect={setSelectedCity}
+            selectedFilter={selectedFilter}
           />
         </div>
 
