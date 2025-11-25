@@ -1,14 +1,38 @@
 import { useState, useEffect, useMemo } from "react";
+import { Routes, Route, useNavigate, useParams, Navigate } from "react-router-dom";
 import MapView from "./components/MapView";
 import RightPanel from "./components/RightPanel";
 import HeaderBar from "./components/HeaderBar";
 import FilterBar from "./components/FilterBar";
 import { useCityClusters } from "./hooks/useCityClusters";
+import { toSlug, fromSlug } from "./utils/slugs";
 
-export default function App() {
+function MapPage() {
+  const { citySlug } = useParams();
+  const navigate = useNavigate();
+  const { data: clusters, loading, error } = useCityClusters();
+
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState("ALL");
-  const { data: clusters, loading, error } = useCityClusters();
+
+  // Sync URL with State
+  useEffect(() => {
+    if (loading) return;
+
+    if (citySlug) {
+      const city = fromSlug(citySlug, clusters);
+      if (city) {
+        setSelectedCity(city);
+        setSelectedFilter(city.city);
+      } else {
+        // Invalid slug, redirect to home
+        navigate("/", { replace: true });
+      }
+    } else {
+      setSelectedCity(null);
+      setSelectedFilter("ALL");
+    }
+  }, [citySlug, clusters, loading, navigate]);
 
   const filteredClusters = useMemo(() => {
     if (selectedFilter === "ALL") return clusters;
@@ -16,11 +40,8 @@ export default function App() {
   }, [clusters, selectedFilter]);
 
   const [theme, setTheme] = useState(() => {
-    // Check localStorage first
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) return savedTheme;
-
-    // Fallback to system preference
     if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
       return "light";
     }
@@ -28,22 +49,19 @@ export default function App() {
   });
 
   const closePanel = () => {
-    setSelectedCity(null);
-    setSelectedFilter("ALL"); // Reset filter when panel closes
+    navigate("/");
   };
 
   const handleFilterSelect = (filter) => {
-    setSelectedFilter(filter);
-
     if (filter === "ALL") {
-      setSelectedCity(null);
+      navigate("/");
     } else {
-      // Find the city object and open the panel
-      const city = clusters.find(c => c.city === filter);
-      if (city) {
-        setSelectedCity(city);
-      }
+      navigate(`/${toSlug(filter)}`);
     }
+  };
+
+  const handleMarkerClick = (city) => {
+    navigate(`/${toSlug(city.city)}`);
   };
 
   const toggleTheme = () => {
@@ -53,7 +71,6 @@ export default function App() {
     document.documentElement.classList.toggle("light", newTheme === "light");
   };
 
-  // Apply theme on initial load and listen for system changes
   useEffect(() => {
     const root = document.documentElement;
     if (theme === "light") {
@@ -63,7 +80,6 @@ export default function App() {
     }
   }, [theme]);
 
-  // Listen for system preference changes
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
     const handleChange = (e) => {
@@ -75,11 +91,6 @@ export default function App() {
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
-
-  const handleMarkerClick = (city) => {
-    setSelectedCity(city);
-    setSelectedFilter(city.city); // Sync filter with marker selection
-  };
 
   return (
     <>
@@ -107,5 +118,15 @@ export default function App() {
         <RightPanel city={selectedCity} onClose={closePanel} isOpen={!!selectedCity} />
       </div>
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<MapPage />} />
+      <Route path="/:citySlug" element={<MapPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
