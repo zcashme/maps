@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import MapView from "./components/MapView";
 import RightPanel from "./components/RightPanel";
 import HeaderBar from "./components/HeaderBar";
+import { useCityClusters } from "./hooks/useCityClusters";
 
 export default function App() {
   const [selectedCity, setSelectedCity] = useState(null);
-  const [clusters, setClusters] = useState([]);
+  const { data: clusters, loading, error } = useCityClusters();
+
   const [theme, setTheme] = useState(() => {
     // Check localStorage first
     const savedTheme = localStorage.getItem("theme");
@@ -61,8 +63,8 @@ export default function App() {
       <div className={`slide-container ${selectedCity ? "open" : ""}`}>
         <div className="map-box">
           <MapView
+            clusters={clusters}
             onCitySelect={setSelectedCity}
-            onDataLoaded={setClusters}
           />
         </div>
 

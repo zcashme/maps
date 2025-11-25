@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet.markercluster";
@@ -6,19 +6,7 @@ import "leaflet/dist/leaflet.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
-export default function MapView({ onCitySelect, onDataLoaded }) {
-  const [clusters, setClusters] = useState([]);
-
-  useEffect(() => {
-    async function load() {
-      const res = await fetch("https://zcashme-map-api.trinath-panda-6cd.workers.dev/");
-      const json = await res.json();
-
-      setClusters(json);
-      if (onDataLoaded) onDataLoaded(json);
-    }
-    load();
-  }, []);
+export default function MapView({ clusters, onCitySelect }) {
 
   return (
     <MapContainer
