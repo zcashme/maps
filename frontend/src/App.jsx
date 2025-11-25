@@ -112,6 +112,7 @@ function MapPage() {
             clusters={filteredClusters}
             onCitySelect={handleMarkerClick}
             selectedFilter={selectedFilter}
+            theme={theme}
           />
         </div>
 
