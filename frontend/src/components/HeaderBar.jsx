@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import Leaderboard from "./Leaderboard";
 import "./HeaderBar.css";
 
 export default function HeaderBar() {
@@ -27,6 +28,7 @@ export default function HeaderBar() {
       </div>
 
       <div className="header-right">
+        <Leaderboard />
         <ThemeToggle />
       </div>
     </header>
