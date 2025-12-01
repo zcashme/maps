@@ -1,0 +1,92 @@
+.leaderboard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    margin-right: 16px;
+    border-right: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+}
+
+.dark .leaderboard {
+    border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard h3 {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted, #888);
+    white-space: nowrap;
+}
+
+.leader-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 8px;
+}
+
+.leader-list li {
+    display: flex;
+    align-items: center;
+}
+
+.leader-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.04);
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+}
+
+.dark .leader-link {
+    background: rgba(255, 255, 255, 0.06);
+    color: #eee;
+}
+
+.leader-link:hover {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.dark .leader-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.leader-link .rank {
+    font-weight: 700;
+    color: var(--accent, #f5a623);
+    font-size: 0.7rem;
+}
+
+.leader-link .city {
+    white-space: nowrap;
+}
+
+.leader-link .count {
+    background: var(--accent, #f5a623);
+    color: white;
+    padding: 0 5px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 16px;
+    text-align: center;
+    height: 16px;
+    line-height: 16px;
+}
+
+/* Responsive: Hide on small screens */
+@media (max-width: 768px) {
+    .leaderboard {
+        display: none;
+    }
+}

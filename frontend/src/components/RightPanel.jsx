@@ -1,13 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "./RightPanel.css";
 
 export default function RightPanel({ city, onClose, isOpen }) {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
 
-  // Reset category when city changes
-  useEffect(() => {
-    setSelectedCategory("ALL");
-  }, [city]);
+  // Reset category when city changes - Handled by key prop in parent
 
   const filteredUsers = city?.users.filter(u => {
     if (selectedCategory === "ALL") return true;
@@ -51,7 +48,13 @@ export default function RightPanel({ city, onClose, isOpen }) {
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((u, i) => (
                   <li key={i} className="user-item">
-                    <strong>{u.name}</strong>
+                    {u.profileurl ? (
+                      <a href={u.profileurl} target="_blank" rel="noopener noreferrer" className="user-link">
+                        <strong>{u.name}</strong>
+                      </a>
+                    ) : (
+                      <strong>{u.name}</strong>
+                    )}
                     <div style={{ fontSize: "0.8em", color: "#888" }}>{u.category}</div>
                   </li>
                 ))
