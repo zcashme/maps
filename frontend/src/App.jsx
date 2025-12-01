@@ -5,7 +5,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<MapPage />} />
-      <Route path="/:citySlug" element={<MapPage />} />
+      <Route path="/:countrySlug" element={<MapPage />} />
+      <Route path="/:countrySlug/:citySlug" element={<MapPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
