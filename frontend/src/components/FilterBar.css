@@ -1,12 +1,30 @@
+/* --- MATCH HEADER SIZE + TRANSLUCENCY --- */
 .filter-bar-container {
     position: relative;
     display: flex;
     gap: 10px;
+
+    /* SAME HEIGHT AS HEADER */
+    height: 44px;
+    align-items: center;
+
+    /* SAME TRANSLUCENT GLASS AS RIGHT PANEL */
+    background: rgba(247, 241, 232, 0.20);
+    backdrop-filter: blur(24px);
+
+    /* spacing to keep layout identical */
+    padding: 0 24px;
+
     width: auto;
     max-width: 600px;
-    margin: 10px;
+    margin: 0; /* remove accidental extra vertical spacing */
+
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+
     z-index: 2000;
+    border-radius: 0; /* still flush like zcash.me */
 }
+
 
 .dropdown-wrapper {
     position: relative;
@@ -15,7 +33,7 @@
 
 .dropdown-trigger {
     width: 100%;
-    padding: 10px 15px;
+    padding: 6px 12px; /* perfect Zcash.me size */
     background: var(--bg-color, #fff);
     border: 1px solid var(--border-color, #ccc);
     border-radius: 8px;
@@ -37,16 +55,23 @@
     top: 100%;
     left: 0;
     width: 100%;
-    max-height: 300px;
-    background: var(--bg-color, #fff);
-    border: 1px solid var(--border-color, #ccc);
-    border-radius: 8px;
+    max-height: 260px;
+
+    /* MATCH PROFILE SEARCH DROPDOWN */
+    background: rgba(10, 17, 38, 0.90);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(10, 17, 38, 0.60);
+    border-radius: 12px;
+
     margin-top: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow-y: auto; /* match searchbar scroll */
+    z-index: 2001;
+
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    z-index: 2001;
+
+    /* REMOVE OLD SHADOW */
+    box-shadow: none;
 }
 
 .search-box {
@@ -79,11 +104,24 @@
 }
 
 .dropdown-item {
-    padding: 10px 15px;
+    padding: 8px 12px;
     cursor: pointer;
     font-size: 14px;
-    color: var(--text-color, #333);
+
+    /* MATCH PROFILESEARCHDROPDOWN COLORS */
+    color: #ffffff;
+    font-weight: 500;
+
     transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.dropdown-item.selected {
+    background: rgba(255, 255, 255, 0.18);
+    color: #6ea8fe;
 }
 
 .dropdown-item:hover {

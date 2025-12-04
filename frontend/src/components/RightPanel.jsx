@@ -1,8 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./RightPanel.css";
+import MapProfileCard from "./MapProfileCard";
+import { supabase } from "../supabase";
+import { useMapProfiles } from "../hooks/useMapProfiles";
 
 export default function RightPanel({ city, onClose, isOpen }) {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
+
+  // TEMP: verify Supabase connection from Maps frontend
+  useEffect(() => {
+    async function testSupabase() {
+      const { data, error } = await supabase
+        .from("zcasher_with_referral_rank")   // EXACT table name from useProfiles.js
+        .select("id, name")
+        .limit(5);
+
+      console.log("Supabase test:", data, error);
+    }
+
+    testSupabase();
+  }, []);
 
   // Reset category when city changes - Handled by key prop in parent
 
@@ -45,22 +62,16 @@ export default function RightPanel({ city, onClose, isOpen }) {
             <h3>Users ({filteredUsers.length})</h3>
 
             <ul className="user-list">
-              {filteredUsers.length > 0 ? (
-                filteredUsers.map((u, i) => (
-                  <li key={i} className="user-item">
-                    {u.profileurl ? (
-                      <a href={u.profileurl} target="_blank" rel="noopener noreferrer" className="user-link">
-                        <strong>{u.name}</strong>
-                      </a>
-                    ) : (
-                      <strong>{u.name}</strong>
-                    )}
-                    <div style={{ fontSize: "0.8em", color: "#888" }}>{u.category}</div>
-                  </li>
-                ))
-              ) : (
-                <li className="no-users">No users found in this category.</li>
-              )}
+{filteredUsers.length > 0 ? (
+  filteredUsers.map((u, i) => (
+    <li key={i} className="user-item" style={{ listStyle: "none" }}>
+      <MapProfileCard profile={u} />
+    </li>
+  ))
+) : (
+  <li className="no-users">No users found in this category.</li>
+)}
+
             </ul>
           </>
         )}

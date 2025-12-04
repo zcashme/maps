@@ -1,0 +1,103 @@
+.map-profile-card {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #181818;
+  border: 1px solid #333;
+  color: #fff;
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.08s ease;
+}
+
+.map-profile-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  border-color: #555;
+}
+
+/* yellow glow for featured */
+.map-profile-card.card-featured {
+  box-shadow: 0 0 0 2px #f5c84c, 0 8px 16px rgba(0, 0, 0, 0.6);
+  border-color: #f5c84c;
+}
+
+/* avatar container */
+.avatar-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  padding: 4px; /* NEW: exposes gradient ring */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  box-sizing: border-box; /* ensure padding doesn't break layout */
+}
+
+/* blue for unverified */
+.avatar-unverified {
+  background: #246bff;
+}
+
+/* green for verified */
+.avatar-verified {
+  background: #13c56b;
+}
+
+/* actual image */
+.avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+/* fallback letter if no image */
+.avatar-initial {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* right side content */
+.card-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.name {
+  font-weight: 600;
+  color: var(--accent); /* same as "maps.zcash.me" header blue */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.verified-badge {
+  font-size: 14px;
+  color: #13c56b;
+}
+
+.category,
+.stats {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.avatar-verified-rank {
+  background: linear-gradient(90deg, #13c56b, #ff3b3b) !important;
+}
+
+.avatar-unverified-rank {
+  background: linear-gradient(90deg, #246bff, #ff3b3b) !important;
+}

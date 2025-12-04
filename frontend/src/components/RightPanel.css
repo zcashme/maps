@@ -4,20 +4,32 @@
 .right-panel {
     position: fixed;
 
-    /* FIX #3: Top = Header (64px) + FilterBar (50px) */
+    /* stays positioned below header + filterbar */
     top: 114px;
 
-    right: 0;
-    width: 320px;
-    /* Height = 100% - Top Offset (114px) */
-    height: calc(100% - 114px);
-    background: var(--panel-bg);
+    /* FLOAT: pull panel inward from the right side */
+    right: 16px;
+
+    width: 340px;
+
+    /* FLOAT: shorter than screen so bottom corners are visible */
+    height: calc(100% - 140px);
+
+    /* TRUE translucent cream background */
+    background: rgba(247, 241, 232, 0.55);
+
+    /* REAL blur to reveal the map beneath */
+    backdrop-filter: blur(18px);
+
+    /* floating card border + radius */
+    border: 2px solid #1d4ed8;
+    border-radius: 18px;
+
     overflow-y: auto;
     z-index: 99999;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
 
-    /* Animation */
-    transform: translateX(100%);
+    /* keep animation */
+    transform: translateX(120%);
     transition: transform 0.3s ease-in-out;
 }
 
@@ -69,130 +81,42 @@
 
 .cat-btn {
     background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    /* DARKER + SAME BLUE AS EVERYTHING ELSE */
+    border: 1px solid var(--accent);
+
     color: var(--text);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+
+    /* zcash.me pill size */
+    padding: 6px 16px;
+
+    /* fully rounded */
+    border-radius: 999px;
+
+    font-size: 0.88rem;
     cursor: pointer;
     transition: all 0.2s;
 }
+
 
 .cat-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
 .cat-btn.active {
-    background: var(--accent);
+    background: var(--accent); /* header blue */
     color: #fff;
     border-color: var(--accent);
+
+    /* pill shape (same radius, but explicit for consistency) */
+    border-radius: 999px;
+
+    /* slightly wider for emphasis, like zcash.me */
+    padding: 6px 18px;
+
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
-.no-users {
-    color: var(--muted);
-    font-style: italic;
-    padding: 10px;
-    text-align: center;
-}
-
-/* --------------------------------------------------
-   USER LIST
--------------------------------------------------- */
-.user-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-/* --------------------------------------------------
-   RIGHT PANEL (OVERLAY)
--------------------------------------------------- */
-.right-panel {
-    position: fixed;
-
-    /* FIX #3: Top = Header (64px) + FilterBar (50px) */
-    top: 114px;
-
-    right: 0;
-    width: 320px;
-    /* Height = 100% - Top Offset (114px) */
-    height: calc(100% - 114px);
-    background: var(--panel-bg);
-    overflow-y: auto;
-    z-index: 99999;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-
-    /* Animation */
-    transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
-}
-
-.right-panel.open {
-    transform: translateX(0);
-}
-
-/* --------------------------------------------------
-   PANEL CONTENT
--------------------------------------------------- */
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.panel-header h2 {
-    margin: 0;
-    font-size: 1.25rem;
-}
-
-.panel-header .meta {
-    margin-top: 4px;
-    font-size: 0.9rem;
-    color: var(--muted);
-}
-
-.close-btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 1.4rem;
-}
-
-.panel-body {
-    padding: 14px;
-}
-
-/* Category Filter */
-.category-filter {
-    display: flex;
-    gap: 8px;
-    margin: 15px 0;
-    flex-wrap: wrap;
-}
-
-.cat-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.cat-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.cat-btn.active {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-}
 
 .no-users {
     color: var(--muted);
