@@ -1,40 +1,34 @@
 /* --------------------------------------------------
-   RIGHT PANEL (OVERLAY)
+   RIGHT PANEL (FIXED-WIDTH FLEX CHILD — ALWAYS VISIBLE)
 -------------------------------------------------- */
 .right-panel {
-    position: fixed;
-
-    /* stays positioned below header + filterbar */
-    top: 114px;
-
-    /* FLOAT: pull panel inward from the right side */
-    right: 16px;
-
-    width: 340px;
-
-    /* FLOAT: shorter than screen so bottom corners are visible */
-    height: calc(100% - 140px);
+    position: relative;                 /* no overlay */
+    width: 340px;                       /* same width as before */
+    flex-shrink: 0;                     /* do NOT shrink */
+    height: calc(100vh - 140px);        /* same visible height */
+    overflow-y: auto;
+    z-index: 1;                         /* only used for internal stacking */
 
     /* TRUE translucent cream background */
     background: rgba(247, 241, 232, 0.55);
 
-    /* REAL blur to reveal the map beneath */
+    /* REAL blur */
     backdrop-filter: blur(18px);
 
-    /* floating card border + radius */
-    border: 2px solid #1d4ed8;
-    border-radius: 18px;
+    /* REMOVE border + radius per your request */
+    border: none;
+    border-radius: 0;
 
-    overflow-y: auto;
-    z-index: 99999;
+    /* removed all slide animations / transforms */
+    transform: none;
+    transition: none;
 
-    /* keep animation */
-    transform: translateX(120%);
-    transition: transform 0.3s ease-in-out;
+    margin-right: 16px;                 /* same right padding effect */
 }
 
+/* .open is harmless but does nothing now */
 .right-panel.open {
-    transform: translateX(0);
+    transform: none;
 }
 
 /* --------------------------------------------------
@@ -81,42 +75,27 @@
 
 .cat-btn {
     background: rgba(255, 255, 255, 0.1);
-
-    /* DARKER + SAME BLUE AS EVERYTHING ELSE */
     border: 1px solid var(--accent);
-
     color: var(--text);
-
-    /* zcash.me pill size */
     padding: 6px 16px;
-
-    /* fully rounded */
     border-radius: 999px;
-
     font-size: 0.88rem;
     cursor: pointer;
     transition: all 0.2s;
 }
-
 
 .cat-btn:hover {
     background: rgba(255, 255, 255, 0.2);
 }
 
 .cat-btn.active {
-    background: var(--accent); /* header blue */
+    background: var(--accent);
     color: #fff;
     border-color: var(--accent);
-
-    /* pill shape (same radius, but explicit for consistency) */
     border-radius: 999px;
-
-    /* slightly wider for emphasis, like zcash.me */
     padding: 6px 18px;
-
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
-
 
 .no-users {
     color: var(--muted);
@@ -142,7 +121,6 @@
     color: var(--text);
 }
 
-/* User Link */
 .user-link {
     text-decoration: none;
     color: var(--accent);

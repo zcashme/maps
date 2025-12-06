@@ -11,16 +11,15 @@
 
 :root.light {
   --bg: #f7f1e8;        /* exact zcash.me background */
-  --panel-bg: #ffffff;  /* optional: matches zcash.me inner panels */
+  --panel-bg: #ffffff;
   --muted: #616f7a;
   --text: #0f1720;
   --accent: #2b6cb0;
 }
 
 /* --------------------------------------------------
-   GLOBAL - FIX #1: Add Box Sizing
+   GLOBAL BOX-SIZING RESET
 -------------------------------------------------- */
-/* This ensures padding doesn't expand element width/height */
 *,
 *::before,
 *::after {
@@ -40,36 +39,30 @@ body,
   overflow: hidden;
 }
 
-
-
-
-
 /* --------------------------------------------------
-   MAIN LAYOUT CONTAINER
+   MAIN TWO-COLUMN LAYOUT (PANEL LEFT • MAP RIGHT)
 -------------------------------------------------- */
 .slide-container {
-  position: relative;
+  display: flex;
+  flex-direction: row;     /* panel → left, map → right */
   width: 100%;
-  /* Height = 100% - Header (64px) - FilterBar (50px) */
-  height: calc(100% - 64px - 50px);
+  height: calc(100vh - 140px); /* Header + FilterBar */
   overflow: hidden;
 }
 
 /* --------------------------------------------------
-   MAP BOX
+   MAP AREA (FLEXES TO FILL REMAINING SPACE)
 -------------------------------------------------- */
 .map-box {
-  position: absolute;
-  inset: 0;
-  width: 100%;
+  flex: 1;
   height: 100%;
+  min-width: 0;             /* CRITICAL for Leaflet resizing */
+  overflow: hidden;
 }
 
-.map-box>.leaflet-container {
+.map-box > .leaflet-container {
   width: 100%;
   height: 100%;
-  /* border-radius: 10px;  <-- REMOVE THIS if you want full screen. 
-     Border radius creates gaps at the corners of the screen. */
 }
 
 /* --------------------------------------------------
@@ -84,14 +77,15 @@ body,
 }
 
 /* --------------------------------------------------
-   Tailwind
+   TAILWIND
 -------------------------------------------------- */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* --- Zcash.me Global Scrollbar --- */
+/* --------------------------------------------------
+   CUSTOM SCROLLBAR (Zcash.me style)
+-------------------------------------------------- */
 
 ::-webkit-scrollbar {
   width: 8px;
