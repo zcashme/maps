@@ -51,9 +51,12 @@ export function useMapProfiles() {
         return;
       }
 
-      const profilesWithCoords = (data || [])
-        // keep users that have either real city or dummy map row
-        .filter((p) => p.worldcities || p.zcasher_map_data)
+const profilesWithCoords = (data || [])
+  // keep only real users with an approved location (real OR legacy dummy)
+  .filter((p) =>
+    (p.worldcities && p.nearest_city_name) ||
+    (p.zcasher_map_data && p.zcasher_map_data.city)
+  )
         .map((p) => {
           const hasReal =
             !!p.worldcities &&
@@ -84,7 +87,9 @@ export function useMapProfiles() {
             verified_links_count: p.verified_links_count,
             address_verified: p.address_verified,
             featured: p.featured,
-            profileurl: `https://zcash.me/${p.slug}`,
+            profileurl: p.address_verified
+  ? `https://zcash.me/${p.name}`
+  : `https://zcash.me/${p.name}-${p.id}`,
 
             // coords used by map
             lat,

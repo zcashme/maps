@@ -1,43 +1,25 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState(() => {
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) return savedTheme;
-        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
-            return "light";
-        }
-        return "dark";
-    });
+    // 🔒 Hard-lock theme to light
+    const theme = "light";
 
     useEffect(() => {
         const root = document.documentElement;
-        if (theme === "light") {
-            root.classList.add("light");
-            root.classList.remove("dark");
-        } else {
-            root.classList.remove("light");
-            root.classList.add("dark");
-        }
-        localStorage.setItem("theme", theme);
-    }, [theme]);
 
-    useEffect(() => {
-        const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
-        const handleChange = (e) => {
-            if (!localStorage.getItem("theme")) {
-                setTheme(e.matches ? "light" : "dark");
-            }
-        };
+        // Always force light mode classes
+        root.classList.add("light");
+        root.classList.remove("dark");
 
-        mediaQuery.addEventListener("change", handleChange);
-        return () => mediaQuery.removeEventListener("change", handleChange);
+        // Optional: clean up any previously saved theme
+        localStorage.removeItem("theme");
     }, []);
 
+    // Toggle is intentionally a no-op to preserve API stability
     const toggleTheme = () => {
-        setTheme((prev) => (prev === "light" ? "dark" : "light"));
+        // no-op: dark mode is disabled by design
     };
 
     return (

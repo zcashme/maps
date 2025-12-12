@@ -1,41 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./RightPanel.css";
 import MapProfileCard from "./MapProfileCard";
-import { supabase } from "../supabase";
 import { getFlagForCountry } from "../utils/countryFlags";
 
 export default function RightPanel({ city, onClose, isOpen }) {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
-  const [sortBy, setSortBy] = useState("name");
+  const [filterText, setFilterText] = useState("");
 
-  // TEMP test
+  // mobile bottom-sheet state
+  const [panelState, setPanelState] = useState("collapsed"); // collapsed | expanded
+  const bodyRef = useRef(null);
+
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  // Reset panel when city changes
   useEffect(() => {
-    async function test() {
-      const { data, error } = await supabase
-        .from("zcasher_with_referral_rank")
-        .select("id, name")
-        .limit(5);
-      console.log("Supabase test:", data, error);
-    }
-    test();
-  }, []);
+    if (isMobile) setPanelState("collapsed");
+    setFilterText("");
+  }, [city, isMobile]);
 
-  // -------------------------------
-  // NULL SAFE
-  // -------------------------------
-  if (!city) {
-    return (
-      <aside className={`right-panel ${isOpen ? "open" : ""}`}>
-        <div className="panel-header">
-          <h2>Click a city</h2>
-          <button className="close-btn" onClick={onClose}>✕</button>
-        </div>
-        <div className="panel-body">
-          <p>Select a marker to view users</p>
-        </div>
-      </aside>
-    );
-  }
+  // Auto-collapse when scrolled to top
+  useEffect(() => {
+    if (!isMobile || !bodyRef.current) return;
+
+    const el = bodyRef.current;
+
+    const onScroll = () => {
+      if (el.scrollTop === 0 && panelState === "expanded") {
+        setPanelState("collapsed");
+      }
+    };
+
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [isMobile, panelState]);
+
+  if (!city) return null;
 
   // -------------------------------
   // TITLES
@@ -49,57 +49,86 @@ export default function RightPanel({ city, onClose, isOpen }) {
   if (city.city === "In View") {
     title = "Users in View";
     meta = `${count} users in current frame`;
-  }
-  else if (city.city === "Featured") {
+  } else if (city.city === "Featured") {
     title = "Featured Users";
     meta = `${count} featured users`;
-  }
-  else if (city.city === "Cluster") {
+  } else if (city.city === "Cluster") {
     title = "Cluster";
     meta = `${count} users across multiple cities`;
-  }
-  else if (city.city === city.country) {
+  } else if (city.city === city.country) {
     const uniqueCities = new Set(rawUsers.map(u => u.city)).size;
     title = `${getFlagForCountry(city.country)} ${city.country}`;
     meta = `${uniqueCities} cities • ${count} users`;
-  }
-  else {
+  } else {
     title = `${getFlagForCountry(city.country)} ${city.city}, ${city.country}`;
     meta = `${count} users`;
   }
 
   // -------------------------------
-  // SORTING + FEATURED PINNING
+  // FILTERING (featured always pinned)
   // -------------------------------
+  const matchesFilter = (u) => {
+    if (!filterText) return true;
+    const q = filterText.toLowerCase();
+    return (
+      u.name?.toLowerCase().includes(q) ||
+      u.city?.toLowerCase().includes(q) ||
+      u.country?.toLowerCase().includes(q)
+    );
+  };
 
-  // Always separate featured + regular
-  const featuredUsers = rawUsers.filter(u => u.featured);
-  const regularUsers = rawUsers.filter(u => !u.featured);
+  const featuredUsers = rawUsers.filter(
+    u => u.featured && matchesFilter(u)
+  );
 
-  // Sort regular users ONLY
-  const sortedRegular = [...regularUsers].sort((a, b) => {
-    if (sortBy === "name") return a.name.localeCompare(b.name);
-    if (sortBy === "joined") {
-      return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-    }
-    return 0;
-  });
+  const regularUsers = rawUsers.filter(
+    u => !u.featured && matchesFilter(u)
+  );
 
-  // Final ordering: featured then sorted regular
-  const sortedUsers = [...featuredUsers, ...sortedRegular];
+  const filteredUsers = [...featuredUsers, ...regularUsers];
 
   // -------------------------------
   // JSX
   // -------------------------------
   return (
-    <aside className={`right-panel ${isOpen ? "open" : ""}`}>
+    <aside
+      className={`right-panel ${isOpen ? "open" : ""} ${
+        isMobile ? `mobile ${panelState}` : ""
+      }`}
+    >
       <div className="panel-header">
-        <h2>{title}</h2>
-        <button className="close-btn" onClick={onClose}>✕</button>
+        <div className="header-left">
+          <h2>{title}</h2>
+          {isMobile && <p className="meta">{meta}</p>}
+        </div>
+
+        <div className="header-actions">
+          {isMobile && (
+            panelState === "collapsed" ? (
+              <button
+                className="panel-toggle"
+                onClick={() => setPanelState("expanded")}
+                aria-label="Expand panel"
+              >
+                ▲
+              </button>
+            ) : (
+              <button
+                className="panel-toggle"
+                onClick={() => setPanelState("collapsed")}
+                aria-label="Collapse panel"
+              >
+                ▼
+              </button>
+            )
+          )}
+
+          <button className="close-btn" onClick={onClose}>✕</button>
+        </div>
       </div>
 
-      <div className="panel-body">
-        <p className="meta">{meta}</p>
+      <div className="panel-body" ref={bodyRef}>
+        {!isMobile && <p className="meta">{meta}</p>}
 
         <div className="category-filter">
           {["ALL", "Business", "Personal", "Organization"].map((cat) => (
@@ -113,29 +142,34 @@ export default function RightPanel({ city, onClose, isOpen }) {
           ))}
         </div>
 
-        {/* Users header + sorting */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h3>Users ({sortedUsers.length})</h3>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{ padding: "4px 6px", fontSize: "0.9rem", borderRadius: "4px" }}
-          >
-            <option value="name">Sort: Name</option>
-            <option value="joined">Sort: Joined</option>
-          </select>
-        </div>
+<div
+  className="users-header"
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "8px"
+  }}
+>
+  <h3 style={{ marginRight: "auto" }}>
+    Users ({filteredUsers.length})
+  </h3>
+
+  <input
+    type="text"
+    placeholder="Filter users…"
+    value={filterText}
+    onChange={(e) => setFilterText(e.target.value)}
+    className="user-filter-input"
+  />
+</div>
+
 
         <ul className="user-list">
-          {sortedUsers.length > 0 ? (
-            sortedUsers.map((u, i) => (
-              <li key={i} className="user-item" style={{ listStyle: "none" }}>
-                <MapProfileCard profile={u} />
-              </li>
-            ))
-          ) : (
-            <li className="no-users">No users found.</li>
-          )}
+          {filteredUsers.map((u, i) => (
+            <li key={i} className="user-item">
+              <MapProfileCard profile={u} />
+            </li>
+          ))}
         </ul>
       </div>
     </aside>

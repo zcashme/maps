@@ -111,7 +111,13 @@ export function useCityClusters() {
             id: p.id,
             name: p.name,
             category: p.category || "Unknown",
-            profileurl: `https://zcash.me/${p.slug}`,
+            profileurl: (() => {
+  const safeName = p.name.trim().replace(/\s+/g, "_");
+  return p.address_verified
+    ? `https://zcash.me/${safeName}`
+    : `https://zcash.me/${safeName}-${p.id}`;
+})(),
+
             profile_image_url: p.profile_image_url,
             verified_links_count: p.verified_links_count,
             address_verified: p.address_verified,
